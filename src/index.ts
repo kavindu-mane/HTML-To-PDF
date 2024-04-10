@@ -15,7 +15,7 @@ app.use(
 	"*",
 	cors({
 		origin: "http://localhost:3000",
-		allowHeaders: ["Content-Type", "Authorization", "Response-Type", "Credentials"],
+		allowHeaders: ["Content-Type", "Authorization", "Response-Type"],
 		allowMethods: ["GET", "POST", "OPTIONS"],
 		exposeHeaders: [""],
 		maxAge: 600,
@@ -43,25 +43,25 @@ app.get("/", (c) => {
 
 // post route for your custom html
 app.post("/pdf", async (c) => {
-	try {
+	// try {
 		const html = await c.req.parseBody();
 		const pdf = await convertToPDF(html["html"].toString() || "<h1>Empty HTML</h1>");
 		//@ts-ignore
 		return c.text(pdf, { headers: { "Content-Type": "application/pdf" } });
-	} catch (e) {
-		return c.json({ message: e }, 500);
-	}
+	// } catch (e) {
+	// 	return c.json({ message: e }, 500);
+	// }
 });
 
 // get route for our predefined html
 app.get("/pdf", async (c) => {
-	try {
+	// try {
 		const pdf = await convertToPDF(Html().toString());
 		//@ts-ignore
 		return c.text(pdf, { headers: { "Content-Type": "application/pdf" } });
-	} catch (e) {
-		return c.json({ message: e }, 500);
-	}
+	// } catch (e) {
+	// 	return c.json({ message: e }, 500);
+	// }
 });
 
 const post = process.env.PORT || 9000;
