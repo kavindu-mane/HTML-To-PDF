@@ -2,8 +2,8 @@
 
 # if you want to use nodejs, you can use this command first
 bun-to-node:
-	cd npm i bcrypt @hono/node-server
-	cd npm i -D tsx @types/bcrypt @types/node
+	npm i @hono/node-server
+	npm i -D tsx @types/node
 
 setup-node:
 	npm install
