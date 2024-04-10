@@ -49,7 +49,7 @@ app.post("/pdf", async (c) => {
 		//@ts-ignore
 		return c.text(pdf, { headers: { "Content-Type": "application/pdf" } });
 	} catch (e) {
-		return c.json({ message: "Error Occurred" }, 500);
+		return c.json({ message: e }, 500);
 	}
 });
 
@@ -60,7 +60,7 @@ app.get("/pdf", async (c) => {
 		//@ts-ignore
 		return c.text(pdf, { headers: { "Content-Type": "application/pdf" } });
 	} catch (e) {
-		return c.json({ message: "Error Occurred" }, 500);
+		return c.json({ message: e }, 500);
 	}
 });
 
