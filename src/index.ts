@@ -14,10 +14,10 @@ const app = new Hono();
 app.use(
 	"*",
 	cors({
-		origin: ["http://localhost:3000"],
+		origin: "*",
 		allowHeaders: ["Content-Type"],
-		allowMethods: ["GET", "POST", "PUT", "DELETE"],
-		exposeHeaders: ["Content-Length"],
+		allowMethods: ["GET", "POST", "OPTIONS"],
+		exposeHeaders: [""],
 		maxAge: 600,
 		credentials: true,
 	})
@@ -41,6 +41,16 @@ app.get("/", (c) => {
 	return c.text("HTML To PDF is Working!");
 });
 
+// post route for your custom html
+app.post("/pdf", async (c) => {
+	const { html } = await c.req.json();
+	// const html = Html().toString();
+	const pdf = await convertToPDF(html);
+	//@ts-ignore
+	return c.text(pdf, { headers: { "Content-Type": "application/pdf" } });
+});
+
+// get route for our predefined html
 app.get("/pdf", async (c) => {
 	const html = Html().toString();
 	const pdf = await convertToPDF(html);
@@ -55,8 +65,8 @@ app.get("/pdf", async (c) => {
  */
 
 export default {
-  port: 9000,
-  fetch: app.fetch,
+	port: 9000,
+	fetch: app.fetch,
 };
 
 /**
