@@ -14,8 +14,8 @@ const app = new Hono();
 app.use(
 	"*",
 	cors({
-		origin: "*",
-		allowHeaders: ["Content-Type"],
+		origin: "http://localhost:3000",
+		allowHeaders: ["Content-Type", "Authorization", "Response-Type", "Credentials"],
 		allowMethods: ["GET", "POST", "OPTIONS"],
 		exposeHeaders: [""],
 		maxAge: 600,
@@ -43,20 +43,28 @@ app.get("/", (c) => {
 
 // post route for your custom html
 app.post("/pdf", async (c) => {
-	const { html } = await c.req.json();
-	// const html = Html().toString();
-	const pdf = await convertToPDF(html);
-	//@ts-ignore
-	return c.text(pdf, { headers: { "Content-Type": "application/pdf" } });
+	try {
+		const html = await c.req.parseBody();
+		const pdf = await convertToPDF(html["html"].toString() || "<h1>Empty HTML</h1>");
+		//@ts-ignore
+		return c.text(pdf, { headers: { "Content-Type": "application/pdf" } });
+	} catch (e) {
+		return c.json({ message: "Error Occurred" }, 500);
+	}
 });
 
 // get route for our predefined html
 app.get("/pdf", async (c) => {
-	const html = Html().toString();
-	const pdf = await convertToPDF(html);
-	//@ts-ignore
-	return c.text(pdf, { headers: { "Content-Type": "application/pdf" } });
+	try {
+		const pdf = await convertToPDF(Html().toString());
+		//@ts-ignore
+		return c.text(pdf, { headers: { "Content-Type": "application/pdf" } });
+	} catch (e) {
+		return c.json({ message: "Error Occurred" }, 500);
+	}
 });
+
+const post = process.env.PORT || 9000;
 
 /**
  * @requires
@@ -65,7 +73,7 @@ app.get("/pdf", async (c) => {
  */
 
 export default {
-	port: 9000,
+	port: post,
 	fetch: app.fetch,
 };
 
@@ -76,6 +84,6 @@ export default {
  */
 
 // serve({
-//   port: 9000,
+//   port: post,
 //   fetch: app.fetch,
 // })
