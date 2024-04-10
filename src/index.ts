@@ -2,6 +2,12 @@ import { Hono } from "hono";
 import puppeteer from "puppeteer";
 import { cors } from "hono/cors";
 import { Html } from "./components";
+/**
+ * @requires
+ * If you are run on Bun you need to comment bellow line .
+ * If you are run on Nodejs you need to uncomment bellow line.
+ */
+// import { serve } from "@hono/node-server";
 
 const app = new Hono();
 
@@ -42,7 +48,24 @@ app.get("/pdf", async (c) => {
 	return c.text(pdf, { headers: { "Content-Type": "application/pdf" } });
 });
 
+/**
+ * @requires
+ * If you are run on Nodejs you need to comment bellow line .
+ * If you are run on Bun you need to uncomment bellow line.
+ */
+
 export default {
-	port: 9000,
-	fetch: app.fetch,
+  port: 9000,
+  fetch: app.fetch,
 };
+
+/**
+ * @requires
+ * If you are run on Bun you need to comment bellow line .
+ * If you are run on Nodejs you need to uncomment bellow line.
+ */
+
+// serve({
+//   port: 9000,
+//   fetch: app.fetch,
+// })
