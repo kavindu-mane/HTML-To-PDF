@@ -44,8 +44,8 @@ app.get("/", (c) => {
 // post route for your custom html
 app.post("/pdf", async (c) => {
 	try {
-		const html = await c.req.parseBody();
-		const pdf = await convertToPDF(html["html"].toString() || "<h1>Empty HTML</h1>");
+		const { html } = await c.req.json();
+		const pdf = await convertToPDF(html || "<h1>Empty HTML</h1>");
 		//@ts-ignore
 		return c.text(pdf, { headers: { "Content-Type": "application/pdf" } });
 	} catch (e) {
