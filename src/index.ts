@@ -1,5 +1,4 @@
 import { Hono } from "hono";
-import puppeteer from "puppeteer";
 import { cors } from "hono/cors";
 import { Html } from "./components.js";
 /**
@@ -8,6 +7,7 @@ import { Html } from "./components.js";
  * If you are run on Nodejs you need to uncomment bellow line.
  */
 import { serve } from "@hono/node-server";
+import { getPage } from "./utils.js";
 
 const app = new Hono();
 
@@ -25,15 +25,14 @@ app.use(
 
 const convertToPDF = async (html: string) => {
   const margins = { top: "0mm", right: "0mm", bottom: "0mm", left: "0mm" };
-  const browser = await puppeteer.launch({ headless: true });
-  const page = await browser.newPage();
+  // const browser = await puppeteer.launch({ headless: true });
+  const page = await getPage();
   await page.setContent(html);
   const pdf = await page.pdf({
     format: "A4",
     margin: margins,
     printBackground: true,
   });
-  await browser.close();
   return pdf;
 };
 
